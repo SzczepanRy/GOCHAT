@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"
+        integrity="sha512-Xm9qbB6Pu06k3PUwPj785dyTl6oHxgsv9nHp7ej7nCpAqGZT3OZpsELuCYX05DdonFpTlBpXMOxjavIAIUwr0w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/static/index.js" defer></script>
+</head>
+
+<body>
+    <nav>
+        <div class="logo"> chatApp </div>
+        <ul class="navOptions">
+            <li class="navOption"> option</li>
+            <li class="navOption"> option</li>
+            <li class="navOption"> option</li>
+            <li class="navOption"> option</li>
+        </ul>
+
+    </nav>
+    <dialog class="availibleChats">
+        <ul>
+            <li>availible chats will be here</li>
+        </ul>
+            <button class="closeAvailible">close</button>
+    </dialog>
+    <dialog class="createChat" >
+        <form method="post" action="/api/createChat">
+            <input type="text" class="newChatName">
+           <button class="sendChat" type="submit">send</button>
+           <button class="cancelChat" >cancel</button>
+        </form>
+
+    </dialog>
+    <main>
+
+        <!-- <textarea name="chats" cols="30" rows="30"></textarea> -->
+        <aside>
+            <div class="loginInfo">
+                current user [user]
+            </div>
+            <div class="joinChat">
+                <button class="joinChatButton">join a chat</button>
+                <button class="createChatButton">create a chat</button>
+            </div>
+            <ul class="chatList">
+                <li>chat1 </li>
+                <li>chat2 </li>
+            </ul>
+
+        </aside>
+        <section class="chatbox">
+            <h3 class="title"> DID NOT CONNECT </h3>
+            <ul class="messages"></ul>
+
+            <form class="messageBar">
+                <input type="text" class="inputBox" placeholder="message" />
+                <button type="submit">send</button>
+            </form>
+
+
+        </section>
+    </main>
+</body>
+
+</html>

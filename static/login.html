@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/login.css" />
+    <script src="/static/login.js" defer></script>
+</head>
+
+<body>
+
+    <div class="login">
+         <div class="loginForm" method="post" action="/api/login">
+            <p>login form </p>
+            <input type="text" name="login"   class="loginL" placeholder="login">
+            <input type="text" name="password" class="passwordL" placeholder="password">
+            <button type="submit" class="loginButton">submit</button>
+        </div>
+       <div class="redgisterForm" method="post" action="/api/redgister">
+            <p>redgister form </p>
+            <input type="text" name="login"   class="loginR" placeholder="login">
+            <input type="text" name="password" class="passwordR" placeholder="password">
+            <button type="submit" class="redgisterButton">submit</button>
+
+        </div>
+
+
+            <div class="nav">
+             <button class="loginNav">login</button>
+             <button class="redgisterNav">redgister</button>
+            </div>
+    </div>
+</body>
+</html>

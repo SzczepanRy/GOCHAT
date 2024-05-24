@@ -14,7 +14,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// ////////////////////////////////////////
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
@@ -48,17 +47,15 @@ func SocketHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// ///////////////////////////////////////////
 func HandleFiles(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./static/login.html")
 
 }
 
-// //////////////////////////////////////////
 const (
-	MinCost     int = 4  // the minimum allowable cost as passed in to GenerateFromPassword
-	MaxCost     int = 31 // the maximum allowable cost as passed in to GenerateFromPassword
-	DefaultCost int = 10 // the cost that will actually be set if a cost below MinCost is passed into GenerateFromPassword
+	MinCost     int = 4
+	MaxCost     int = 31
+	DefaultCost int = 10
 )
 
 func HashPassword(password string) (string, error) {
@@ -130,7 +127,7 @@ func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			values = append(values, value)
 		}
 
-		if len(values) > 2 {
+		if len(values) > 1 {
 			errLog(errors.New(" more than one ocurrene"), w)
 		}
 

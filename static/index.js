@@ -4,11 +4,36 @@ const ul = document.querySelector(".messages");
 const input = document.querySelector(".inputBox");
 const form = document.querySelector(".messageBar");
 
-console.log("js works");
+console.log(document.cookie);
+
+function getToken() {
+    let cookie = document.cookie
+    let token = cookie.split(";")[0].split("=")[1]
+    return token
+}
+
+
 
 window.addEventListener("load", () => {
+    (async () => {
+
+
+        let res = await fetch("/api/validate", {
+            method: "POST",
+            headers: { "Content-type": "application/json" }
+            ,
+            body: JSON.stringify({ accessToken: getToken() })
+        })
+
+        let data = await res.json()
+
+        if (!data.ok) {
+
+            window.location.href = "/"
+        }
+    })()
     socket.onopen = () => {
-        const title= document.querySelector(".title")
+        const title = document.querySelector(".title")
         title.innerText = "CONNECTED";
     };
 });
@@ -34,25 +59,35 @@ socket.onmessage = (e) => {
 };
 
 
+const logoutBtn = document.querySelector(".logout")
+logoutBtn.addEventListener("click", () => {
+    console.log("clear")
+
+    cookieStore.delete("token");
+    window.location.href = "/"
+
+})
+
+
 const createChat = document.querySelector(".createChat")
 const createChatButton = document.querySelector(".createChatButton")
 
-createChatButton.addEventListener("click",()=>{
+createChatButton.addEventListener("click", () => {
     createChat.showModal();
 })
 const cancelChatButton = document.querySelector(".cancelChat")
 
-cancelChatButton.addEventListener("click",()=>{
+cancelChatButton.addEventListener("click", () => {
     createChat.close();
 })
 
 const availibleChats = document.querySelector(".availibleChats")
 const joinChatButton = document.querySelector(".joinChatButton")
-joinChatButton.addEventListener("click",()=>{
+joinChatButton.addEventListener("click", () => {
     availibleChats.showModal()
 })
 
-const  closeAvailible = document.querySelector(".closeAvailible")
-closeAvailible.addEventListener("click",()=>{
+const closeAvailible = document.querySelector(".closeAvailible")
+closeAvailible.addEventListener("click", () => {
     availibleChats.close()
 })

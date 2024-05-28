@@ -103,9 +103,10 @@ type usersRow struct {
 }
 
 type resType struct {
-    Success     bool `json:"success"`
-    AccessToken string `json:"accessToken"`
+	Success     bool   `json:"success"`
+	AccessToken string `json:"accessToken"`
 }
+
 func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		var data loginBody
@@ -149,9 +150,40 @@ func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			errLog(err, w)
 		}
-        fmt.Println("json sent successfully")
-        w.Header().Set("content-type","application/json")
-        w.Write(jsonRes)
+		fmt.Println("json sent successfully")
+		w.Header().Set("content-type", "application/json")
+		w.Write(jsonRes)
+	} else {
+		errLog(errors.New("wiorn method"), w)
+	}
+
+}
+
+type validateBody struct {
+	AccessToken string `json:"accessToken"`
+}
+
+type validBody struct {
+	OK bool `json:"ok"`
+}
+
+func Verify(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		var data validateBody
+		var res validBody
+        err := json.NewDecoder(r.Body).Decode(&data)
+		if err != nil {
+			errLog(err, w)
+		}
+		err = jwt.VerifyToken(data.AccessToken)
+		if err != nil {
+            res.OK = false
+		}else{
+
+            res.OK = true
+        }
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(res)
 	} else {
 		errLog(errors.New("wiorn method"), w)
 	}

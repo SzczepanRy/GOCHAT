@@ -41,7 +41,7 @@ loginButton.addEventListener("click", () => {
                 const d = new Date()
                 d.setTime(d.getTime() + (1000* 60*60))
                 document.cookie=`token=${data.accessToken}; expires=${d.toUTCString()};path=/`
-
+                window.location.href = "/static"
             }
 
             console.log(data)

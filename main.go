@@ -28,7 +28,7 @@ func main() {
 	serveFiles := http.HandlerFunc(handlers.HandleFiles)
 	redgister:= http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.Redgister(db, w, r) })
     login:= http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.Login(db, w, r) })
-
+    validate:= http.HandlerFunc(handlers.Verify)
 
 
     mux.Handle("/static/", http.StripPrefix("/static", fs))
@@ -36,6 +36,7 @@ func main() {
 	mux.Handle("/", middleware.HeaderMiddleware(serveFiles))
 	mux.Handle("/api/redgister", middleware.HeaderMiddleware(redgister))
 	mux.Handle("/api/login", middleware.HeaderMiddleware(login))
+	mux.Handle("/api/validate", middleware.HeaderMiddleware(validate))
 
 	log.Print("running on 3000")
 

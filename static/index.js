@@ -6,9 +6,11 @@ const form = document.querySelector(".messageBar");
 
 console.log(document.cookie);
 
-function getToken() {
+function getCookie(index) {
     let cookie = document.cookie
-    let token = cookie.split(";")[0].split("=")[1]
+
+    let token = cookie.split(";")[index].split("=")[1]
+
     return token
 }
 
@@ -22,7 +24,7 @@ window.addEventListener("load", () => {
             method: "POST",
             headers: { "Content-type": "application/json" }
             ,
-            body: JSON.stringify({ accessToken: getToken() })
+            body: JSON.stringify({ accessToken: getCookie(1) })
         })
 
         let data = await res.json()
@@ -31,6 +33,29 @@ window.addEventListener("load", () => {
 
             window.location.href = "/"
         }
+        document.querySelector(".loginInfo").innerText ="logged in as " + getCookie(0)
+
+        //display chats
+
+
+        res = await fetch("/api/getChatRooms", {
+            method: "GET",
+            headers: { "Content-type": "application/json" }
+            ,
+        })
+
+        data = await res.json()
+
+        const chatList = document.querySelector(".chatList")
+        data.chatNames.map((name)=>{
+            let li = document.createElement("li")
+            li.innerText = name
+            chatList.append(li)
+
+        })
+
+
+
     })()
     socket.onopen = () => {
         const title = document.querySelector(".title")

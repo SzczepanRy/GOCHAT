@@ -17,6 +17,16 @@ func main() {
     log.Fatal("Error loading .env file")
   }
 
+
+
+    var chatRooms = map[string][]string{
+        "mainchat": []string{"default", "hi there"},
+    }
+    //send the chat in websocket chatrooms then bassed on that fill the chat messages // with returning do the same add a heder of the chat dand its messsage then pare it out on the frontend  since its  a brodcas channa l i gorilla websocket can suck my dic fr fr on god no cap
+
+
+
+
 	db := conn.ConnectToDB()
 	defer db.Close()
 
@@ -29,6 +39,8 @@ func main() {
 	redgister:= http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.Redgister(db, w, r) })
     login:= http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.Login(db, w, r) })
     validate:= http.HandlerFunc(handlers.Verify)
+    rooms := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.GetChatNames(w,r,&chatRooms)})
+
 
 
     mux.Handle("/static/", http.StripPrefix("/static", fs))
@@ -37,6 +49,9 @@ func main() {
 	mux.Handle("/api/redgister", middleware.HeaderMiddleware(redgister))
 	mux.Handle("/api/login", middleware.HeaderMiddleware(login))
 	mux.Handle("/api/validate", middleware.HeaderMiddleware(validate))
+    mux.Handle("/api/getChatRooms",  middleware.HeaderMiddleware(rooms))
+
+    //mux.Handle("/api/getChatRooms", rooms)
 
 	log.Print("running on 3000")
 

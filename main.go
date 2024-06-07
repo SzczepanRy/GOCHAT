@@ -21,6 +21,7 @@ func main() {
 
     var chatRooms = map[string][]string{
         "mainchat": []string{"default", "hi there"},
+        "chat": []string{"second"},
     }
     //send the chat in websocket chatrooms then bassed on that fill the chat messages // with returning do the same add a heder of the chat dand its messsage then pare it out on the frontend  since its  a brodcas channa l i gorilla websocket can suck my dic fr fr on god no cap
 
@@ -34,12 +35,12 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	ws := http.HandlerFunc(handlers.SocketHandler)
+	ws := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.SocketHandler(w,r,chatRooms) })
 	serveFiles := http.HandlerFunc(handlers.HandleFiles)
 	redgister:= http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.Redgister(db, w, r) })
     login:= http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.Login(db, w, r) })
     validate:= http.HandlerFunc(handlers.Verify)
-    rooms := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.GetChatNames(w,r,&chatRooms)})
+    rooms := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { handlers.GetChatNames(w,r,chatRooms)})
 
 
 

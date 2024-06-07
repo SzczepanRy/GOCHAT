@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/websocket"
 )
@@ -22,12 +23,12 @@ type ReturnChatNames struct {
 	ChatNames []string `json:"chatNames"`
 }
 
-func GetChatNames(w http.ResponseWriter, r *http.Request , chatRooms *map[string][]string) {
+func GetChatNames(w http.ResponseWriter, r *http.Request, chatRooms map[string][]string) {
 	if r.Method == "GET" {
 
 		var rooms []string
 
-		for k, _ := range *chatRooms {
+		for k, _ := range chatRooms {
 			rooms = append(rooms, k)
 
 		}
@@ -53,12 +54,9 @@ func GetChatNames(w http.ResponseWriter, r *http.Request , chatRooms *map[string
 
 }
 
+///GET CAHT LOAGS NEEDS TO HEPPEN
 
-
-
-
-
-func SocketHandler(w http.ResponseWriter, r *http.Request) {
+func SocketHandler(w http.ResponseWriter, r *http.Request, chatRooms map[string][]string) {
 	//check if the protocol can become a websocket one
 	wsConn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -73,10 +71,18 @@ func SocketHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Printf("%s send: %s\n", wsConn.RemoteAddr(), string(msg))
 		//loop if found and sent to browser
+
+
+		messageVals := strings.Split(string(msg), "::")
+        if !strings.Contains(string(msg), "::change1234321") {
+
+		    chatRooms[messageVals[0]] = append(chatRooms[messageVals[0]], messageVals[1])
+        }
+
+
 		for _, client := range clients {
 
-            //if msgType contaius a groupchat message ment the corresponding array // format in json
-			if err = client.WriteMessage(msgType, msg); err != nil {
+			if err = client.WriteMessage(msgType, []byte(fmt.Sprint(chatRooms[messageVals[0]]))); err != nil {
 				fmt.Println(err)
 				return
 			}

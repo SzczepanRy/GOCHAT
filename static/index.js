@@ -14,9 +14,9 @@ function getCookie(index) {
     return token
 }
 
+let currentChat = "maincaht"
 
-
-window.addEventListener("load", () => {
+function render(){
     (async () => {
 
 
@@ -33,7 +33,7 @@ window.addEventListener("load", () => {
 
             window.location.href = "/"
         }
-        document.querySelector(".loginInfo").innerText ="logged in as " + getCookie(0)
+        document.querySelector(".loginInfo").innerText = "logged in as " + getCookie(0)
 
         //display chats
 
@@ -47,16 +47,24 @@ window.addEventListener("load", () => {
         data = await res.json()
 
         const chatList = document.querySelector(".chatList")
-        data.chatNames.map((name)=>{
+        data.chatNames.map((name) => {
             let li = document.createElement("li")
             li.innerText = name
+            li.className = "chat"
             chatList.append(li)
 
         })
 
+        sendMessage()
+        choseChat()
 
 
     })()
+
+}
+
+window.addEventListener("load", () => {
+    render()
     socket.onopen = () => {
         const title = document.querySelector(".title")
         title.innerText = "CONNECTED";
@@ -64,17 +72,53 @@ window.addEventListener("load", () => {
 });
 
 
+function choseChat() {
+    const chatsLi = document.querySelectorAll(".chat")
+    let chatsList = [...chatsLi]
+    chatsList.map((chatEl) => {
+        chatEl.addEventListener("click", (e) => {
+            console.log("chat chosen")
+            currentChat = e.target.innerText
+            changeChat()
+            render()
+        })
+    })
+
+}
+
+
+function sendMessage() {
+
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input.value) {
+            socket.send(`${currentChat}::${input.value}`);
+            input.value = "";
+        }
+        input.focus();
+    });
+
+
+}
+
+function changeChat(){
+    const chatList = document.querySelector(".chatList")
+
+    chatList.innerHTML=""
+
+    const messages = document.querySelector(".messages")
+    messages.innerHTML = ""
+
+    socket.send(`${currentChat}::change1234321`);
+
+}
 
 
 
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (input.value) {
-        socket.send(input.value);
-        input.value = "";
-    }
-    input.focus();
-});
+//////////////////////////////////////basic stuff
+
+
 socket.onmessage = (e) => {
     console.log(e.data);
     const li = document.createElement("li");
@@ -82,6 +126,17 @@ socket.onmessage = (e) => {
 
     ul.append(li);
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
 const logoutBtn = document.querySelector(".logout")
